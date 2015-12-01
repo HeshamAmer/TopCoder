@@ -23,7 +23,7 @@ using namespace std;
 
 bool isnum(string S){
 	for (int i = 0; i < S.size(); i++){
-		if (!isdigit(S[i])){
+		if (!isdigit(S[i])){ 
 			return false;
 		}
 	}
