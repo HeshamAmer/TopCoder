@@ -81,8 +81,10 @@ int main(){
 	}
 	sort(A.begin(), A.end());
 	for (int i = 0; i < B.size(); i++){
-		cout<<bin_search(A, B[i], 0, A.size()-1 ,0)<<endl;
+		//cout<<bin_search(A, B[i], 0, A.size()-1 ,0)<<endl;
+		cout << upper_bound(A.begin(), A.end(), B[i])-A.begin() <<" ";
 	}
+	cout << endl;
 	
 	return 0;
 }
