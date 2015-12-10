@@ -1,0 +1,51 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <memory>
+#include <stdio.h>
+#include <iostream>
+#include <cmath>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <sstream>
+#include <bitset>
+#include <numeric>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+typedef long long ll;
+using namespace std;
+//max (0.3x, (1 - m/250)x - 50w);
+
+int main(){
+//	ifstream cin("in.txt");
+	vector<int> M, W, H;
+	int x;
+	for (int i = 0; i < 5; i++){
+		cin >> x;
+		M.push_back(x);
+	}
+	for (int i = 0; i < 5; i++){
+		cin >> x;
+		W.push_back(x);
+	}
+	cin >> x;
+	H.push_back(x);
+	cin >> x;
+	H.push_back(x);
+	int res = 0;
+	for (int i = 0; i <5; i++){
+		long double x = (i+1)* 500;
+		long double y = 1- (M[i] / 250.0);
+
+		res += max( 150*(i+1), 2*(250-M[i])*(i+1) - (50 * W[i]));
+
+	}
+	res += H[0] * 100 - H[1] * 50;
+	cout << res<<endl;
+	return 0;
+}
