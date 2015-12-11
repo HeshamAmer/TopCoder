@@ -44,17 +44,19 @@ BinarySearch(A[0..N - 1], value, low, high) {
 			return mid
 }
 */
-int bin_search(vector<int> V,int val,int low,int high,int mid){
+vector<int> V;
+int val;
+int bin_search(int low,int high){
 	if (high < low)
 	{
 		return low;
 	}
-	mid = (low + high) / 2;
+	int mid = (low + high) / 2;
 	if (V[mid] > val){
-		return (bin_search(V, val, low, mid - 1,mid));
+		return (bin_search( low, mid - 1));
 	}
 	else if (V[mid] < val)
-		return bin_search(V, val, mid + 1, high,mid);
+		return bin_search( mid + 1, high);
 	else
 	{
 		int x = V[mid];
@@ -80,9 +82,11 @@ int main(){
 		B.push_back(x);
 	}
 	sort(A.begin(), A.end());
+	V = A;
 	for (int i = 0; i < B.size(); i++){
-		//cout<<bin_search(A, B[i], 0, A.size()-1 ,0)<<endl;
-		cout << upper_bound(A.begin(), A.end(), B[i])-A.begin() <<" ";
+		val = B[i];
+		cout<<bin_search( 0, A.size()-1 )<<endl;
+	//	cout << upper_bound(A.begin(), A.end(), B[i])-A.begin() <<" ";
 	}
 	cout << endl;
 	
