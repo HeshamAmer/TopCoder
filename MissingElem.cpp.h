@@ -23,37 +23,30 @@ using namespace std;
 
 int solution(vector<int> &A) {
 	// write your code in C++11
-	ll arrSum = 0;
-	ll begin = 0;
-	ll res = -1;
-	int sum = 0;
-	vector<ll> V;
-	V.push_back(0);
-
-	for (int i =1; i <= A.size(); i++) {
-		arrSum += A[i-1];
-		sum += A[i - 1];
-		V.push_back(sum);
+	map <ll, ll> M;
+	ll res = 0;
+	M[0] = 1;
+	for (int i = 0; i < A.size(); i++){
+		M[A[i]] = 1;
 	}
-	arrSum -= A[0];
-	for (int i = 1; i < A.size(); i++){
-		arrSum -= A[i];
-		if (V[i] == arrSum){
+	for (int i = 0; i < M.size(); i++){
+		if (!M.count(i)){
 			res = i;
 			break;
 		}
-			
 	}
-
-	cout << res << endl;
+	if (res == 0){
+		res = M.size();
+	}
+	cout << res;
 	return res;
-
 }
 
 int main(){
-//	ifstream cin("in.txt");
-	int a[] = { -1, 3, -4, 5, 1, -6, 2, 1 };
-	vector<int> V(begin(a),end(a));
+	//	ifstream cin("in.txt");
+	//int a[] = { 1,3,6,4,1,2 };
+	ll a[] = { -2147483648LL };
+	vector<int> V(begin(a), end(a));
 	solution(V);
 
 	return 0;
