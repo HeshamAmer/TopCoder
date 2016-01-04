@@ -1,0 +1,14 @@
+int STI(string str)
+{
+int numb;
+istringstream ( str ) >> numb;
+return numb;
+}
+
+string ITS(int a){
+
+stringstream ss;
+ss << a;
+string str = ss.str();
+return str;
+}
