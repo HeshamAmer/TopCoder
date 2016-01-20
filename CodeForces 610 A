@@ -1,0 +1,14 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Jan 20 16:44:14 2016
+
+@author: V14HAmer2
+"""
+
+x=int(raw_input())
+if (x%2!=0):
+    print 0
+elif (x%4==0):
+    print x/4 - 1
+else:
+    print x/4
