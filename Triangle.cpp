@@ -17,23 +17,29 @@
 #include <cstdlib>
 #include <cctype>
 #include <cstring>
-#include<stdio.h>
-
 typedef long long ll;
 using namespace std;
-int main(){
-	ifstream cin("in.txt");
-	ll N,S,P,Q;
-	cin >> N >> S >> P >> Q;
-	vector<ll> V(N);
-	set<ll> mySet;
-	V[0] = S % 2147483648;
-	mySet.insert(V[0]);
-	for (int i = 1; i < N; i++){
-		V[i] = (V[i - 1] * P + Q) % 2147483648;
-		mySet.insert(V[i]);
-	}
-	cout << mySet.size() << endl;
-	return 0;
+//max (0.3x, (1 - m/250)x - 50w);
 
+int solution(vector<int> &A) {
+	// write your code in C++11
+	sort(A.begin(), A.end());
+	int res = 0;
+	for (int i = 2; i < A.size(); i++){
+		ll T = A[i - 1] + A[i - 2];
+		ll K = A[i];
+		if (K < T)
+			res = 1;
+
+	}
+	return res;
+}
+
+int main(){
+	//	ifstream cin("in.txt");
+	int a[] = { 0,1,0,1,1,1,0,1};
+	vector<int> V(begin(a), end(a));
+	solution(V);
+
+	return 0;
 }
