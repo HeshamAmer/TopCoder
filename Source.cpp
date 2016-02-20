@@ -1,3 +1,4 @@
+//https://www.hackerrank.com/challenges/even-tree 
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -21,19 +22,40 @@
 
 typedef long long ll;
 using namespace std;
+vector<vector<int>> G(101);
+vector<int> parentNode(101);
+vector<int> childCounter(101);
+
+bool visited[101];
+
+int findForest(int x){
+//	cout << x << endl;
+	if (visited[x])
+		return 0;
+	for (int i = 0; i < G[x].size(); i++){
+		
+		childCounter[x] += findForest(G[x][i]);
+		visited[G[x][i]] = true;
+	}
+	return childCounter[x];
+}
 int main(){
 	ifstream cin("in.txt");
-	ll N,S,P,Q;
-	cin >> N >> S >> P >> Q;
-	vector<ll> V(N);
-	set<ll> mySet;
-	V[0] = S % 2147483648;
-	mySet.insert(V[0]);
-	for (int i = 1; i < N; i++){
-		V[i] = (V[i - 1] * P + Q) % 2147483648;
-		mySet.insert(V[i]);
+	int N, M,x,y,res=0;
+	
+	cin >> N >> M;
+	fill(childCounter.begin(), childCounter.end(), 1);
+	for (int i = 0; i < N; i++){
+		cin >> x >> y;
+//		G[x].push_back(y);
+		G[y].push_back(x);
+		parentNode[x] = y;
 	}
-	cout << mySet.size() << endl;
+	findForest(1);
+	for (int i = 0; i < childCounter.size(); i++)
+		if (childCounter[i] % 2 == 0)
+			res++;
+	cout << res-1<<endl;
 	return 0;
 
 }
