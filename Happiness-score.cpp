@@ -40,6 +40,7 @@ bool isPrime(int number){
 	return true;
 
 }
+
 vector<int>V;
 set<int> S;
 int genCombinations(int num,int idx) {
