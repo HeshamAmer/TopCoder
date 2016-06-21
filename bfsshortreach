@@ -1,0 +1,76 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <memory>
+#include <stdio.h>
+#include <iostream>
+#include <list>
+#include <cmath>
+#include <map>
+#include <set>
+#include <stack>
+#include <queue>
+#include <sstream>
+#include <bitset>
+#include <numeric>
+#include <cstdlib>
+#include <cctype>
+#include <cstring>
+typedef long long ll;
+using namespace std;
+#define MAX 99999
+
+
+int main()
+{
+	ifstream cin("in.txt");
+	int T,N,M,x,y,S;
+	int dist[1001]; 
+	cin>>T;
+	for (int t=0;t<T;t++){
+		vector<vector<int>> G(1001);
+		cin>>N>>M;
+		for (int m=0;m<M;m++){
+			cin>>x>>y;
+			G[x].push_back(y);
+			G[y].push_back(x);	
+		}
+		cin>>S;
+	for (int i=0;i<1001;i++)dist[i]=MAX;
+	priority_queue<int,vector<int>, greater<int> > pq;
+	/*Those were test cases to test the PQ correct order using pairs, TIL that PQ is not sorted, it's just commited to delivering 
+		highest on top the queue since it's based on a heap 
+	pq.push(make_pair(5,2));
+	pq.push(make_pair(4,3));
+	pq.push(make_pair(3,1));
+	pq.push(make_pair(7,7));
+	pq.push(make_pair(1,14));
+	*/
+	pq.push(S);
+	dist[S]=0;
+	while (!pq.empty()){
+			int myNode= pq.top();
+			pq.pop();			
+			for (int i=0;i<G[myNode].size();i++){
+		//		printf("Node=%d Dist=%d\n",G[myNode][i],dist[G[myNode][i]]);
+				if (dist[G[myNode][i]] > dist[myNode]+6){
+					dist[G[myNode][i]]=dist[myNode]+6;
+					pq.push(G[myNode][i]);
+				}
+			}
+	}
+	for (int i=1;i<=N;i++){
+		if (dist[i]==MAX)
+			cout<<-1<<" ";
+		else if(i!=S)
+			cout<<dist[i]<<" ";
+	}
+	cout<<endl;
+	}
+	return 0;
+}
+
+
+//https://www.hackerrank.com/challenges/bfsshortreach
