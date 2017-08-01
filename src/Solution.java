@@ -33,8 +33,8 @@ public class Solution {
         //need to do the sort.
         //try right first.
         return Math.max(
-                pullRight(new Point(chinPair.getKey(),chinPair.getValue(), 'X'))
-                , pullLeft(new Point(chinPair.getKey(),chinPair.getValue(), 'X') ));
+                pullRight(new Point(chinPair.getKey() ,chinPair.getValue(), 'X'))
+                , pullLeft(new Point(chinPair.getKey()  ,chinPair.getValue()  , 'X') ));
 
 
 
@@ -54,14 +54,19 @@ public class Solution {
             //CURRENTLY nextIdx contains the position the point WOULD be inserted into if i wanted to
             nextIdx++;
             nextIdx*=-1; //fixing what the binary search reverses
-            //it's only -1 if it means that it should be inserted at first position..
-            //if for example its -3, means it should be inserted at position 2
-            //now it contains the item after mine on the right line
+            //now it contains the item after mine on the left line
             if (nextIdx < points.size() ) {
                 Point nextPoint = points.get(nextIdx); //this should turn into a for loop for all the left lines reachable from here
                 return Math.max(pullLeft(nextPoint) , pullRight(nextPoint)) + point.value ;
-            } else {
-                return pullRight(point ) + point.value;
+            } else { //i need to manifest a breaking condition here..
+                int j=0;
+                while (j<nextIdx) {
+                    points.remove(0);
+                    j++;
+                }
+                if ( rightLines.containsKey(point.y+point.x) )
+                    return pullRight(point ) + point.value;
+                return 0;
             }
         }
     }
@@ -81,16 +86,22 @@ public class Solution {
         } else { //walahy la mesh found, hanreturn -the index -1
             //CURRENTLY nextIdx contains the position the point WOULD be inserted into if i wanted to
             nextIdx++;
-            nextIdx*=-1; //fixing what the binary search reverses
-            //it's only -1 if it means that it should be inserted at first position..
-            //if for example its -3, means it should be inserted at position 2
+            nextIdx*=-1;
             //now it contains the item after mine on the right line
 
             if (nextIdx < points.size() ) {
+                //dp me here
                 Point nextPoint = points.get(nextIdx); //this should turn into a for loop for all the left lines reachable from here
                 return Math.max(pullRight(nextPoint), pullLeft(nextPoint))  + point.value ;
             } else {
-                return pullLeft(point ) + point.value;
+                int j=0;
+                while (j<nextIdx) {
+                    points.remove(0);
+                    j++;
+                }
+                if ( leftLines.containsKey(point.y+point.x) )
+                    return pullLeft( point ) + point.value;
+                return 0;
             }
         }
     }
@@ -100,7 +111,7 @@ public class Solution {
         Pair<Integer, Integer> chin = null;
         for (int i = 0; i < X.length; i++) {
             if (T.charAt(i) == 'X') {
-                chin = new Pair<>(X[i], Y[i]);
+                chin = new Pair<>(X[i], Y[i]); //possibly this needs to be removed and we start the initialization -1 of chin
             }
             int rightLine = Y[i] - X[i];
             int leftLine = Y[i] + X[i];
