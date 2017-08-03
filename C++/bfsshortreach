@@ -40,13 +40,13 @@ int main()
 		cin>>S;
 	for (int i=0;i<1001;i++)dist[i]=MAX;
 	priority_queue<int,vector<int>, greater<int> > pq;
-	/*Those were test cases to test the PQ correct order using pairs, TIL that PQ is not sorted, it's just commited to delivering 
+	/*Those were test cases to test the PQ correct order using Points, TIL that PQ is not sorted, it's just commited to delivering
 		highest on top the queue since it's based on a heap 
-	pq.push(make_pair(5,2));
-	pq.push(make_pair(4,3));
-	pq.push(make_pair(3,1));
-	pq.push(make_pair(7,7));
-	pq.push(make_pair(1,14));
+	pq.push(make_Point(5,2));
+	pq.push(make_Point(4,3));
+	pq.push(make_Point(3,1));
+	pq.push(make_Point(7,7));
+	pq.push(make_Point(1,14));
 	*/
 	pq.push(S);
 	dist[S]=0;

@@ -90,19 +90,22 @@ public class Solution {
         imaginaryPointIndex++;
         imaginaryPointIndex *= -1;
         //imaginaryPointIndex points to the position after mine on the right line
-        if (imaginaryPointIndex == points.size()) { //That means i have no further points on this line
+        if (imaginaryPointIndex <= points.size()) { //That means i have no further points on this line
             for (int i = (point.x + point.y + 1); i <= maxLeftLine; i++) {
-                if (leftLines.containsKey(i)) //FOR LOOP HERE FOR ALL REMAINING LEFT LINES
+                if (leftLines.containsKey(i))
                 {
                     Point intersectionPoint = new Point((i - rightLine) / 2, (i + rightLine) / 2, 'X');
-                    if (intersectionPoint.y > point.y )
-                        return pullLeft(intersectionPoint) + point.value;
+                    if (intersectionPoint.y > point.y ) {
+                        int y=0;
+                        if (imaginaryPointIndex < points.size()) {
+                            y=pullRight(points.get(myPointIndex + 1));
+                        }
+                        int x=pullLeft(intersectionPoint) + point.value;
+                        return Math.max(x,y);
+                    }
                 }
             }
             return point.value;
-        }
-        if (imaginaryPointIndex < points.size()) {
-            return Math.max(pullRight(points.get(myPointIndex + 1)), pullLeft(imaginaryNextPoint)) + point.value;
         }
         return -99999;
     }
