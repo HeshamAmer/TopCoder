@@ -1,4 +1,3 @@
-import javafx.util.Pair;
 
 import java.util.*;
 
@@ -35,16 +34,23 @@ public class Solution {
     private int maxRightLine = 0;
     private Map<Integer, List<Point>> rightLines;
     private Map<Integer, List<Point>> leftLines;
-    private int[][] dp ;
+    private int[][] dp;
 
     public int solution(int[] X, int[] Y, String T) {
         rightLines = new HashMap<>();
         leftLines = new HashMap<>();
-        Pair<Integer, Integer> chinPair = initializeMaps(X, Y, T);
+        initializeMaps(X, Y, T);
+        int index=0;
+        for (int i=0;i<T.length();i++){
+            if (T.charAt(i) == 'X')
+                index = i;
+        }
+        int chinX = X[index];
+        int chinY = Y[index];
         //need to do the sort.
         //try right first.
-        int x = pullRight(new Point(chinPair.getKey(), chinPair.getValue(), 'X'));
-        int y = pullLeft(new Point(chinPair.getKey(), chinPair.getValue(), 'X'));
+        int x = pullRight(new Point(chinX, chinY, 'X'));
+        int y = pullLeft(new Point(chinX, chinY, 'X'));
         return Math.max(x, y);
     }
 
@@ -53,37 +59,34 @@ public class Solution {
         int rightLine = point.y - point.x;
         int leftLine = point.y + point.x;
         List<Point> points = leftLines.get(point.y + point.x);
-        if (points == null ) return 0;
-        Point imaginaryNextPoint = new Point(point.x - 1, point.y + 1, 'x');
-        int imaginaryPointIndex = binarySearchLeftLines(points, imaginaryNextPoint);
+        if (points == null) return 0;
         int myPointIndex = binarySearchLeftLines(points, point);
-        if (imaginaryPointIndex >= 0) { //if the list is always sorted, this means i'm blocked by a point.
-            if (point.c !='X')
-                return 0; //this basically means the imaginary Point right after me was found but i'm not chin.
+        if (myPointIndex < 0) {
+            myPointIndex = ++myPointIndex * -1;
         }
-        imaginaryPointIndex++;
-        imaginaryPointIndex *= -1;
-        //imaginaryPointIndex points to the position after mine on the right line
-        if (imaginaryPointIndex <= points.size()) { //That means i have no further points on this line
-            int x=0,y=0;
-            if (imaginaryPointIndex < points.size()) {
-                y = pullLeft(points.get(myPointIndex + 1)) + point.value;
-            }
-            for (  ; rightLine <= maxRightLine; rightLine++) {
-                if (rightLines.containsKey(rightLine))
-                {
-                    Point intersectionPoint = new Point((- rightLine + leftLine) / 2, (rightLine + leftLine) / 2, 'x');
-                    if (intersectionPoint.y > point.y ) {
-                        x= pullRight(intersectionPoint) + point.value;
-                        return Math.max(x,y);
+        int y = 0;
+        if (myPointIndex < points.size() -1 ) { //That means im the last point on this line
+            Point nextPoint = points.get(myPointIndex + 1);
+            if (nextPoint.x == point.x -1&& nextPoint.y == point.y + 1 )
+                if (point.c != 'X')
+                    return 0; //this basically means the imaginary Point right after me was found but i'm not chin.
+            y = pullLeft(nextPoint) + point.value;
+        }
+        for (rightLine = rightLine +1 ; rightLine <= maxRightLine; rightLine++) {
+            if (rightLines.containsKey(rightLine)) {
+                List<Point> points1 = rightLines.get(rightLine);
+                Point intersectionPoint = new Point((-rightLine + leftLine) / 2, (rightLine + leftLine) / 2, 'x');
+                if (intersectionPoint.y > point.y ) {
+                    int i = binarySearchRightLines(points1, intersectionPoint);
+                    if ( i >= 0){
+                        return Math.max(y, pullLeft(points1.get(i)) + point.value);
+                    } else {
+                        return Math.max(y, pullRight(intersectionPoint) + point.value);
                     }
                 }
             }
-            return point.value;
         }
-
-
-        return -99999;
+        return point.value;
     }
 
 
@@ -93,34 +96,35 @@ public class Solution {
         int leftLine = point.y + point.x;
         List<Point> points = rightLines.get(rightLine);
         if (points == null) return 0;
-        Point imaginaryNextPoint = new Point(point.x + 1, point.y + 1, 'x');
-        int imaginaryPointIndex = binarySearchRightLines(points, imaginaryNextPoint);
         int myPointIndex = binarySearchRightLines(points, point);
-        if (imaginaryPointIndex >= 0) { //if the list is always sorted, this means i'm blocked by a point.
-            if (point.c !='X')
-                return 0; //this basically means the imaginary Point right after me was found.
+        if (myPointIndex < 0) {
+            myPointIndex = ++myPointIndex * -1;
         }
-        imaginaryPointIndex++;
-        imaginaryPointIndex *= -1;
-        //imaginaryPointIndex points to the position after mine on the right line
-        if (imaginaryPointIndex <= points.size()) { //That means i have no further points on this line
-            for (; leftLine <= maxLeftLine; leftLine++) {
-                if (leftLines.containsKey(leftLine))
-                {
-                    Point intersectionPoint = new Point((leftLine - rightLine) / 2, (leftLine + rightLine) / 2, 'x');
-                    if (intersectionPoint.y > point.y ) {
-                        int y=0;
-                        if (imaginaryPointIndex < points.size()) {
-                            y=pullRight(points.get(myPointIndex + 1));
-                        }
-                        int x=pullLeft(intersectionPoint) + point.value;
-                        return Math.max(x,y);
+        int x = 0;
+
+        if (myPointIndex < points.size() -1 ) { //That means i have no further points on this line
+            Point nextPoint = points.get(myPointIndex + 1);
+
+            if (nextPoint.x == point.x + 1 && nextPoint.y  == point.y + 1)
+                if (point.c != 'X')
+                    return 0; //this basically means the imaginary Point right after me was found but i'm not chin
+            x = pullRight(nextPoint) + point.value;
+        }
+        for (leftLine = leftLine+1; leftLine <= maxLeftLine; leftLine++) {
+            if (leftLines.containsKey(leftLine)) {
+                List<Point> points1 = leftLines.get(leftLine);
+                Point intersectionPoint = new Point((leftLine - rightLine) / 2, (leftLine + rightLine) / 2, 'x');
+                if (intersectionPoint.y > point.y) {
+                    int i = binarySearchLeftLines(points1, intersectionPoint);
+                    if ( i >= 0) {
+                        return Math.max(x, pullRight(points1.get(i)) + point.value);
+                    } else {
+                        return Math.max(x, pullLeft(intersectionPoint) + point.value);
                     }
                 }
             }
-            return point.value;
         }
-        return -99999;
+        return point.value;
     }
 
     private int binarySearchRightLines(List<Point> points, Point point) {
@@ -140,14 +144,8 @@ public class Solution {
     }
 
 
-    private Pair<Integer, Integer> initializeMaps(int[] X, int[] Y, String T) {
-
-        Pair<Integer, Integer> chin = null;
+    private void  initializeMaps(int[] X, int[] Y, String T) {
         for (int i = 0; i < X.length; i++) {
-            if (T.charAt(i) == 'X') {
-                chin = new Pair<>(X[i], Y[i]); //possibly this needs to be removed and we start the initialization -1 of chin
-                continue;
-            }
             int rightLine = Y[i] - X[i];
             int leftLine = Y[i] + X[i];
             maxLeftLine = Math.max(maxLeftLine, leftLine);
@@ -159,7 +157,7 @@ public class Solution {
                 List<Point> rightPointsList =
                         rightLines.get(rightLine);//Will fix the negative lines soon.
                 int i1 = binarySearchRightLines(rightPointsList, justAPoint);
-                rightPointsList.add( (i1+1) *-1 ,justAPoint);
+                rightPointsList.add((i1 + 1) * -1, justAPoint);
                 rightLines.put(rightLine, rightPointsList);
             } else {
                 List<Point> L = new ArrayList<>();
@@ -169,7 +167,7 @@ public class Solution {
             if (leftLines.containsKey(leftLine)) {
                 List<Point> leftPointsList = leftLines.get(leftLine);//Will fix the negative lines soon.
                 int i1 = binarySearchRightLines(leftPointsList, justAPoint);
-                leftPointsList.add( (i1+1) *-1 ,justAPoint);
+                leftPointsList.add((i1 + 1) * -1, justAPoint);
                 leftLines.put(leftLine, leftPointsList);
             } else {
                 List<Point> L = new ArrayList<>();
@@ -177,6 +175,5 @@ public class Solution {
                 leftLines.put(Y[i] + X[i], L);
             }
         }
-        return chin;
     }
 }
