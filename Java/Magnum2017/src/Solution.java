@@ -17,11 +17,18 @@ public class Solution {
                 this.value = 1;
             else if (c == 'q') {
                 this.value = 10;
-            } else if (c == 'X') {
+            } else if (c == 'X')
                 this.value = 0;
-            }
         }
 
+        @Override
+        public String toString() {
+            return "Point{" +
+                    "x=" + x +
+                    ", y=" + y +
+                    ", value=" + value +
+                    '}';
+        }
     }
 
     private int maxLeftLine = 0;
@@ -46,31 +53,36 @@ public class Solution {
         int rightLine = point.y - point.x;
         int leftLine = point.y + point.x;
         List<Point> points = leftLines.get(point.y + point.x);
-        if (points == null) return 0;
-        Point imaginaryNextPoint = new Point(point.x - 1, point.y + 1, 'X');
+        if (points == null ) return 0;
+        Point imaginaryNextPoint = new Point(point.x - 1, point.y + 1, 'x');
         int imaginaryPointIndex = binarySearchLeftLines(points, imaginaryNextPoint);
         int myPointIndex = binarySearchLeftLines(points, point);
         if (imaginaryPointIndex >= 0) { //if the list is always sorted, this means i'm blocked by a point.
-            return 0; //this basically means the imaginary Point right after me was found.
+            if (point.c !='X')
+                return 0; //this basically means the imaginary Point right after me was found but i'm not chin.
         }
         imaginaryPointIndex++;
         imaginaryPointIndex *= -1;
         //imaginaryPointIndex points to the position after mine on the right line
-        if (imaginaryPointIndex == points.size()) { //That means i have no further points on this line
-            for (int i = ( - point.x + point.y + 1); i <= maxRightLine; i++) {
-                if (rightLines.containsKey(i)) //FOR LOOP HERE FOR ALL REMAINING LEFT LINES
+        if (imaginaryPointIndex <= points.size()) { //That means i have no further points on this line
+            int x=0,y=0;
+            if (imaginaryPointIndex < points.size()) {
+                y = pullLeft(points.get(myPointIndex + 1)) + point.value;
+            }
+            for (  ; rightLine <= maxRightLine; rightLine++) {
+                if (rightLines.containsKey(rightLine))
                 {
-                    Point intersectionPoint = new Point((i - leftLine) / 2, (i + leftLine) / 2, 'X');
-                    if (intersectionPoint.y > point.y )
-                        return pullLeft(intersectionPoint) + point.value;
+                    Point intersectionPoint = new Point((- rightLine + leftLine) / 2, (rightLine + leftLine) / 2, 'x');
+                    if (intersectionPoint.y > point.y ) {
+                        x= pullRight(intersectionPoint) + point.value;
+                        return Math.max(x,y);
+                    }
                 }
             }
             return point.value;
         }
 
-        if (imaginaryPointIndex < points.size()) {
-            return Math.max(pullLeft(points.get(myPointIndex + 1)), pullRight(imaginaryNextPoint)) + point.value;
-        }
+
         return -99999;
     }
 
@@ -81,20 +93,21 @@ public class Solution {
         int leftLine = point.y + point.x;
         List<Point> points = rightLines.get(rightLine);
         if (points == null) return 0;
-        Point imaginaryNextPoint = new Point(point.x + 1, point.y + 1, 'X');
+        Point imaginaryNextPoint = new Point(point.x + 1, point.y + 1, 'x');
         int imaginaryPointIndex = binarySearchRightLines(points, imaginaryNextPoint);
         int myPointIndex = binarySearchRightLines(points, point);
         if (imaginaryPointIndex >= 0) { //if the list is always sorted, this means i'm blocked by a point.
-            return 0; //this basically means the imaginary Point right after me was found.
+            if (point.c !='X')
+                return 0; //this basically means the imaginary Point right after me was found.
         }
         imaginaryPointIndex++;
         imaginaryPointIndex *= -1;
         //imaginaryPointIndex points to the position after mine on the right line
         if (imaginaryPointIndex <= points.size()) { //That means i have no further points on this line
-            for (int i = (point.x + point.y + 1); i <= maxLeftLine; i++) {
-                if (leftLines.containsKey(i))
+            for (; leftLine <= maxLeftLine; leftLine++) {
+                if (leftLines.containsKey(leftLine))
                 {
-                    Point intersectionPoint = new Point((i - rightLine) / 2, (i + rightLine) / 2, 'X');
+                    Point intersectionPoint = new Point((leftLine - rightLine) / 2, (leftLine + rightLine) / 2, 'x');
                     if (intersectionPoint.y > point.y ) {
                         int y=0;
                         if (imaginaryPointIndex < points.size()) {
@@ -143,19 +156,21 @@ public class Solution {
             Point justAPoint = new Point(X[i], Y[i], T.charAt(i));
 
             if (rightLines.containsKey(rightLine)) {
-                List<Point> rightPairs =
+                List<Point> rightPointsList =
                         rightLines.get(rightLine);//Will fix the negative lines soon.
-                rightPairs.add(justAPoint);
-                rightLines.put(rightLine, rightPairs);
+                int i1 = binarySearchRightLines(rightPointsList, justAPoint);
+                rightPointsList.add( (i1+1) *-1 ,justAPoint);
+                rightLines.put(rightLine, rightPointsList);
             } else {
                 List<Point> L = new ArrayList<>();
                 L.add(justAPoint);
                 rightLines.put(Y[i] - X[i], L);
             }
             if (leftLines.containsKey(leftLine)) {
-                List<Point> leftPairs = leftLines.get(leftLine);//Will fix the negative lines soon.
-                leftPairs.add(justAPoint);
-                leftLines.put(leftLine, leftPairs);
+                List<Point> leftPointsList = leftLines.get(leftLine);//Will fix the negative lines soon.
+                int i1 = binarySearchRightLines(leftPointsList, justAPoint);
+                leftPointsList.add( (i1+1) *-1 ,justAPoint);
+                leftLines.put(leftLine, leftPointsList);
             } else {
                 List<Point> L = new ArrayList<>();
                 L.add(justAPoint);
