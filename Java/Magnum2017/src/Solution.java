@@ -49,31 +49,32 @@ public class Solution {
         int chinY = Y[index];
         int chinRightLine = Y[index]-X[index];
         int chinLeftLine = Y[index] +X[index];
-        final int x1 = binarySearchRightLines( rightLines.get( chinRightLine ), new Point( chinX, chinY, 'x' ) );
-        final int y1 = binarySearchLeftLines( leftLines.get( chinLeftLine ), new Point( chinX, chinY, 'x' ) );
+        final int chinIndexOnRightLine = binarySearchRightLines( rightLines.get( chinRightLine ), new Point( chinX, chinY, 'x' ) );
+        final int chinIndexOnLeftLine = binarySearchLeftLines( leftLines.get( chinLeftLine ), new Point( chinX, chinY, 'x' ) );
 
         //need to do the sort.
         //try right first.
         int x=0,y=0;
-        if (rightLines.get( chinRightLine ).size()>1)
-            x = pullRight(rightLines.get( chinRightLine ).get( x1+1 ));
-        if (leftLines.get( chinLeftLine ).size()>1)
-            y = pullLeft(leftLines.get( chinLeftLine ).get( y1+1 ));
+        if (chinIndexOnRightLine <rightLines.get( chinRightLine ).size() -1)
+            x = pullRight(rightLines.get( chinRightLine ).get( chinIndexOnRightLine+1 ));
+        if (chinIndexOnLeftLine < leftLines.get( chinLeftLine ).size() -1 )
+            y = pullLeft(leftLines.get( chinLeftLine ).get( chinIndexOnLeftLine+1 ));
         return Math.max(x, y);
     }
 
     private int pullLeft(Point point) {
-
+        System.out.println("left "+point);
         int rightLine = point.y - point.x;
         int leftLine = point.y + point.x;
         List<Point> points = leftLines.get(point.y + point.x);
         if (points == null) return 0;
         int myPointIndex = binarySearchLeftLines(points, point);
-        if (myPointIndex < 0) {
-            myPointIndex = ++myPointIndex * -1;
+        if (myPointIndex < 0) { //here's the bug :: Need to differenitate between found at 0 and would be at 0
+            myPointIndex = ++myPointIndex * -1; //IFF val >=0 , then if was found
+
         }
         int y = 0;
-        if (myPointIndex < points.size() -1 ) { //That means im the last point on this line
+        if (myPointIndex < points.size() -1 ) {
             Point nextPoint = points.get(myPointIndex + 1);
             if (nextPoint.x == point.x -1&& nextPoint.y == point.y + 1 )
                 if (point.c != 'X')
@@ -99,7 +100,7 @@ public class Solution {
 
 
     private int pullRight(Point point) {
-
+        System.out.println("right " + point);
         int rightLine = point.y - point.x;
         int leftLine = point.y + point.x;
         List<Point> points = rightLines.get(rightLine);

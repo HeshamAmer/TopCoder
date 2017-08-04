@@ -53,4 +53,32 @@ public class SolutionTest {
         final int solution = sol.solution( X, Y, T );
         Assert.assertEquals(  1, solution );
     }
+    @Test
+    public void Test6() {
+        final int[] X = {0, 1} ;
+        final int[] Y = {2, 1} ;
+        String T = "Xp";
+        sol = new Solution();
+        final int solution = sol.solution( X, Y, T );
+        Assert.assertEquals(  0, solution );
+    }
+    @Test
+    public void Test7() {
+        final int[] X = {3, 2, 0 , 0, 2, 5 , 4 , 4 , 2 , 0, 2 , 8 , 11, 13 , 15} ;
+        final int[] Y = {1, 2, 4 , 6, 8, 11, 14, 16, 12,14, 10, 1 , 2 , 4  , 5} ;
+        String T = "Xppppppqqqqqqqq";
+        sol = new Solution();
+        final int solution = sol.solution( X, Y, T );
+        Assert.assertEquals(  35, solution );
+    }
+    @Test
+    public void Test8() {
+        final int[] X = {4, 5, 3 , 5, 6,7, 7,7,9} ;
+        final int[] Y = {1, 2, 6 , 8, 5,10,6,4,8} ;
+        String T = "Xpqpqpqpq";
+        sol = new Solution();
+        final int solution = sol.solution( X, Y, T );
+        Assert.assertEquals(  13, solution );
+    }
+
 }
