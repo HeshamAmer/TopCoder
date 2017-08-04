@@ -27,10 +27,30 @@ public class SolutionTest {
     @Test
     public void Test3() {
         final int[] X = {0, 6, 2, 5, 3, 0} ;
-        final int[] Y = {4, 8, 2, 3, 1, 6 } ;
+        final int[] Y = {4, 8, 2, 3, 1, 6} ;
         String T = "ppqpXp";
         sol = new Solution();
         final int solution = sol.solution( X, Y, T );
         Assert.assertEquals(  12, solution );
+    }
+
+    @Test
+    public void Test4() {
+        final int[] X = {3, 2, 1} ;
+        final int[] Y = {1, 2, 3};
+        String T = "Xpp";
+        sol = new Solution();
+        final int solution = sol.solution( X, Y, T );
+        Assert.assertEquals(  0, solution );
+    }
+
+    @Test
+    public void Test5() {
+        final int[] X = {3, 1, 6} ;
+        final int[] Y = {1, 3, 6} ;
+        String T = "Xpq";
+        sol = new Solution();
+        final int solution = sol.solution( X, Y, T );
+        Assert.assertEquals(  1, solution );
     }
 }

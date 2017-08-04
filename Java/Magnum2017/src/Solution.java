@@ -47,10 +47,18 @@ public class Solution {
         }
         int chinX = X[index];
         int chinY = Y[index];
+        int chinRightLine = Y[index]-X[index];
+        int chinLeftLine = Y[index] +X[index];
+        final int x1 = binarySearchRightLines( rightLines.get( chinRightLine ), new Point( chinX, chinY, 'x' ) );
+        final int y1 = binarySearchLeftLines( leftLines.get( chinLeftLine ), new Point( chinX, chinY, 'x' ) );
+
         //need to do the sort.
         //try right first.
-        int x = pullRight(new Point(chinX, chinY, 'X'));
-        int y = pullLeft(new Point(chinX, chinY, 'X'));
+        int x=0,y=0;
+        if (rightLines.get( chinRightLine ).size()>1)
+            x = pullRight(rightLines.get( chinRightLine ).get( x1+1 ));
+        if (leftLines.get( chinLeftLine ).size()>1)
+            y = pullLeft(leftLines.get( chinLeftLine ).get( y1+1 ));
         return Math.max(x, y);
     }
 
